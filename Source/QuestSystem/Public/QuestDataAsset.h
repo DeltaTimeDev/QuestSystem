@@ -1,0 +1,40 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "Engine/DataAsset.h"
+#include "QuestDataAsset.generated.h"
+
+/**
+ * 
+ */
+UCLASS()
+class QUESTSYSTEM_API UQuestDataAsset : public UPrimaryDataAsset
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FText QuestName;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FText Description;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TArray<TSubclassOf<class UQuestObjective>> Objectives;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	bool bIsRepeatable = false;
+	
+};
+
+UCLASS()
+class QUESTSYSTEM_API UQuestListDataAsset : public UPrimaryDataAsset
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TMap<FString,UQuestDataAsset*> QuestMap;
+};
