@@ -6,7 +6,6 @@
 #include "Components/TextBlock.h"
 #include "Components/VerticalBox.h"
 #include "Kismet/GameplayStatics.h"
-#include "ActiveQuestObject.h"
 #include "QuestComponent.h"
 #include "QuestObjective.h"
 #include "QuestWorldSubsystem.h"
@@ -40,10 +39,10 @@ void UQuestPanelWidget::RefreshQuestList()
 
 	QuestListBox->ClearChildren();
 
-	const TArray<UActiveQuestObject*> Quests = QuestComponent->GetActivatedQuests();
-	for (const UActiveQuestObject* Quest : Quests)
+	const TArray<UQuest*> Quests = QuestComponent->GetActivatedQuests();
+	for (const UQuest* Quest : Quests)
 	{
-		if (!Quest->Quest) continue;
+		if (!Quest->QuestDataAsset) continue;
 
 		if (Quest->bIsCompleted) continue;
 
@@ -56,15 +55,12 @@ void UQuestPanelWidget::RefreshQuestList()
 				// TextBlock’ları bulup doldur
 				if (UTextBlock* TitleText = Cast<UTextBlock>(Entry->GetWidgetFromName("QuestTitle")))
 				{
-					TitleText->SetText(Quest->Quest->QuestName);
+					TitleText->SetText(FText::FromString(Quest->QuestDataAsset->QuestName));
 				}
 
 				if (UTextBlock* DescText = Cast<UTextBlock>(Entry->GetWidgetFromName("ObjectiveText")))
 				{
-					if (Quest->Objectives.IsValidIndex(Quest->CurrentObjectiveIndex))
-					{
-						DescText->SetText(Quest->Objectives[Quest->CurrentObjectiveIndex]->Description);
-					}
+					DescText->SetText(Quest->Objectives[0]->Description);
 				}
 
 				QuestListBox->AddChild(Entry);

@@ -3,66 +3,88 @@
 
 #include "QuestComponent.h"
 
-#include "ActiveQuestObject.h"
 #include "QuestDataAsset.h"
 #include "QuestObjective.h"
 #include "QuestWorldSubsystem.h"
 
 UQuestComponent::UQuestComponent()
 {
-    PrimaryComponentTick.bCanEverTick = false;
+	PrimaryComponentTick.bCanEverTick = false;
 }
 
 void UQuestComponent::OnRegister()
 {
-    Super::OnRegister();
+	Super::OnRegister();
 
-    if (UQuestWorldSubsystem* QuestWorldSubsystem = GetWorld()->GetSubsystem<UQuestWorldSubsystem>())
-    {
-        QuestWorldSubsystem->RegisterComponent(this);
-        TArray<UQuestDataAsset*> dd;
-        //QuestWorldSubsystem->QuestDataAsset->QuestMap.GenerateValueArray(dd);
-        
-    }
+	QuestWorldSubsystem = GetWorld()->GetSubsystem<UQuestWorldSubsystem>();
+
+	check (QuestWorldSubsystem)
+	
+	if (QuestWorldSubsystem)
+	{
+		QuestWorldSubsystem->RegisterComponent(this);
+	}
 }
 
-void UQuestComponent::StartQuest(UQuestDataAsset* NewQuest)
+void UQuestComponent::ReadAllQuests(TArray<UQuestDataAsset*> QuestDataList)
 {
-    if (!NewQuest) return;
+	for (UQuestDataAsset* QuestData : QuestDataList)
+	{
+		UQuest* NewActiveQuest = NewObject<UQuest>(this, UQuest::StaticClass());
+		NewActiveQuest->QuestDataAsset = QuestData;
+		NewActiveQuest->Init(this);
+		AllQuestList.Add(NewActiveQuest);
+	}
+}
 
-    UActiveQuestObject* NewActiveQuest = NewObject<UActiveQuestObject>(this, UActiveQuestObject::StaticClass());
-    NewActiveQuest->Quest = NewQuest;
-    NewActiveQuest->Init(this);
-    NewActiveQuest->OnActiveQuestFinished.AddDynamic(this,&UQuestComponent::OnActiveQuestFinished);
-    
-    ActivatedQuestList.Add(NewActiveQuest);
+void UQuestComponent::ActivateQuest(FString QuestName)
+{
+	if (UQuest* Quest = GetQuest(QuestName))
+	{
+		ActivateQuest(Quest);
+	}
+	// UActiveQuestObject* NewActiveQuest = NewObject<UActiveQuestObject>(this, UActiveQuestObject::StaticClass());
+	// NewActiveQuest->Quest = NewQuest;
+	// NewActiveQuest->Init(this);
+	// 
+	//
+	// ActivatedQuestList.Add(NewActiveQuest);
+	//
 
-    if (const UQuestWorldSubsystem* QuestWorldSubsystem = GetWorld()->GetSubsystem<UQuestWorldSubsystem>())
-    {
-        QuestWorldSubsystem->OnQuestAddedDelegate.Broadcast(true);
-    }
+}
+
+void UQuestComponent::ActivateQuest(UQuest* Quest)
+{
+	Quest->bIsActivated = true;
+	Quest->OnQuestFinished.AddDynamic(this,&UQuestComponent::OnQuestFinished);
+	ActivatedQuestList.Add(Quest);
+	QuestWorldSubsystem->OnQuestAddedDelegate.Broadcast(true);
 }
 
 
 void UQuestComponent::OnEventReceived(const FGameplayTag& EventTag)
 {
-    for (UActiveQuestObject* Quest : ActivatedQuestList)
-    {
-        for (UQuestObjective* Objective : Quest->Objectives)
-        {
-            Objective->OnEventReceived(EventTag);
-        }
-    }
+	for (UQuest* Quest : AllQuestList)
+	{
+		for (UQuestObjective* Objective : Quest->Objectives)
+		{
+			Objective->OnEventReceived(EventTag);
+		}
+	}
 }
 
-void UQuestComponent::OnActiveQuestFinished(UActiveQuestObject* ActiveQuest)
+void UQuestComponent::OnQuestFinished(UQuest* ActiveQuest)
 {
-    ActiveQuest->OnActiveQuestFinished.RemoveDynamic(this,&UQuestComponent::OnActiveQuestFinished);
-    ActiveQuest->Deinit();
-    //ActivatedQuestList.Remove(ActiveQuest);
+	ActiveQuest->OnQuestFinished.RemoveDynamic(this, &UQuestComponent::OnQuestFinished);
+	ActiveQuest->Deinit();
+	QuestWorldSubsystem->OnQuestFinishDelegate.Broadcast(true);
+}
 
-    if (const UQuestWorldSubsystem* QuestWorldSubsystem = GetWorld()->GetSubsystem<UQuestWorldSubsystem>())
-    {
-        QuestWorldSubsystem->OnQuestFinishDelegate.Broadcast(true);
-    }
+UQuest* UQuestComponent::GetQuest(FString QuestName)
+{
+	UQuest** Found = Algo::FindByPredicate(AllQuestList, [&](UQuest* Quest)
+	{
+		return Quest && Quest->GetQuestName() == QuestName;
+	});
+	return Found ? *Found : nullptr;
 }

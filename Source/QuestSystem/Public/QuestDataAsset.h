@@ -16,10 +16,17 @@ class QUESTSYSTEM_API UQuestDataAsset : public UPrimaryDataAsset
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	FText QuestName;
+	FString QuestName;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	FText Description;
+	FString Description;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FGameplayTag ActivateQuestEvent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FString ActivateQuestNameAfterFinish;
+	
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TArray<TSubclassOf<class UQuestObjective>> Objectives;

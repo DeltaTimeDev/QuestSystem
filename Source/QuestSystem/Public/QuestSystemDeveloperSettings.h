@@ -9,9 +9,13 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(Config=Game, DefaultConfig)
 class QUESTSYSTEM_API UQuestSystemDeveloperSettings : public UDeveloperSettings
 {
 	GENERATED_BODY()
+
+public:	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Quests", Config)
+	TSoftObjectPtr<class UQuestListDataAsset> QuestDataAsset;
 	
 };

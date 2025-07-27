@@ -3,8 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "ActiveQuestObject.h"
 #include "GameplayTagContainer.h"
+#include "Quest.h"
 #include "QuestDataAsset.h"
 #include "Components/ActorComponent.h"
 #include "QuestComponent.generated.h"
@@ -22,25 +22,37 @@ public:
 
 	virtual void OnRegister() override;
 
+	void ReadAllQuests(TArray<UQuestDataAsset*> QuestDataList);
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	TArray<UActiveQuestObject*> PassiveQuestList;
+	TArray<UQuest*> AllQuestList;
 
     /** Aktif görev listesi */
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-    TArray<UActiveQuestObject*> ActivatedQuestList;
+    TArray<UQuest*> ActivatedQuestList;
 
 	 
     /** Görev başlatır */
     UFUNCTION(BlueprintCallable)
-    void StartQuest(class UQuestDataAsset* NewQuest);
+    void ActivateQuest(FString QuestName);
+	
+	void ActivateQuest(UQuest* Quest);
 	
     /** UI için basit getter */
     UFUNCTION(BlueprintPure)
-    const TArray<class UActiveQuestObject*> GetActivatedQuests() const { return ActivatedQuestList; }
+    const TArray<UQuest*> GetActivatedQuests() const { return ActivatedQuestList; }
 
 	
 	void OnEventReceived(const FGameplayTag& EventTag);
 
 	UFUNCTION()
-	void OnActiveQuestFinished(UActiveQuestObject* ActiveQuest);
+	void OnQuestFinished(UQuest* ActiveQuest);
+
+	UQuest* GetQuest(FString QuestName);
+
+
+	// Catche data
+	UPROPERTY()
+	class UQuestWorldSubsystem* QuestWorldSubsystem;
+	
 };

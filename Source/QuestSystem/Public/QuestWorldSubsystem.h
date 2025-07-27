@@ -18,13 +18,25 @@ class QUESTSYSTEM_API UQuestWorldSubsystem : public UWorldSubsystem
 {
 	GENERATED_BODY()
 
-	UPROPERTY()
-	class UQuestListDataAsset* QuestDataAsset;
 
-	UPROPERTY()
-	class UQuestComponent* QuestComponent;
+private:
+	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 
 public:
+	UFUNCTION(BlueprintCallable)
+	void Init();
+	
+	UPROPERTY()
+	class UQuestComponent* QuestComponent;
+	
+	UPROPERTY()
+    class UQuestListDataAsset* QuestDataAsset;
+
+public:
+
+	void GetQuestDataList(TArray<class UQuestDataAsset*>& DataList);
+
+	
 	void RegisterComponent(UQuestComponent* InQuestComponent);
 
 	void BroadcastEvent(const FGameplayTag& EventTag);
@@ -42,8 +54,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void FirstStepFieldBroadcast(bool Value);
 	
-private:
-	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
+
 
 	UFUNCTION()
 	void OnFirstStepField(bool bArg);

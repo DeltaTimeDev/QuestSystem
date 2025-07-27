@@ -33,12 +33,12 @@ public:
 	virtual void CheckObjectiveProgress(AActor* Player) {}
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	FGameplayTag TriggerEvent;
+	FGameplayTag FinishTriggerEvent;
 
 	UFUNCTION(BlueprintCallable)
 	virtual void OnEventReceived(const FGameplayTag& EventTag)
 	{
-		if (EventTag.MatchesTagExact(TriggerEvent))
+		if (EventTag.MatchesTagExact(FinishTriggerEvent))
 		{
 			bIsCompleted = true;
 			OnCompleted.Broadcast(this);

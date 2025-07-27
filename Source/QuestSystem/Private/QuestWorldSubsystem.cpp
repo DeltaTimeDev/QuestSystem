@@ -5,7 +5,7 @@
 
 #include "QuestComponent.h"
 #include "QuestDataAsset.h"
-
+#include "QuestSystemDeveloperSettings.h"
 
 
 void UQuestWorldSubsystem::Initialize(FSubsystemCollectionBase& Collection)
@@ -14,10 +14,25 @@ void UQuestWorldSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 
 	OnFirstStepFieldDelegate.AddDynamic(this, &UQuestWorldSubsystem::OnFirstStepField);
 
-	// if (const UShepherdDeveloperSettings* Settings = GetDefault<UShepherdDeveloperSettings>())
-	// {
-	// 	QuestDataAsset = Settings->QuestDataAsset.LoadSynchronous();
-	// }
+	if (const UQuestSystemDeveloperSettings* Settings = GetDefault<UQuestSystemDeveloperSettings>())
+	{
+		QuestDataAsset = Settings->QuestDataAsset.LoadSynchronous();
+	}
+}
+
+void UQuestWorldSubsystem::Init()
+{
+	check (IsValid(QuestDataAsset))
+	check (IsValid(QuestComponent))
+
+	TArray<UQuestDataAsset*> QuestDataList;
+	GetQuestDataList(QuestDataList);
+	QuestComponent->ReadAllQuests(QuestDataList);
+}
+
+void UQuestWorldSubsystem::GetQuestDataList(TArray<UQuestDataAsset*>& DataList)
+{
+	QuestDataAsset->QuestMap.GenerateValueArray(DataList);
 }
 
 void UQuestWorldSubsystem::RegisterComponent(UQuestComponent* InQuestComponent)
@@ -35,16 +50,7 @@ void UQuestWorldSubsystem::BroadcastEvent(const FGameplayTag& EventTag)
 
 void UQuestWorldSubsystem::OnFirstStepField(bool bArg)
 {
-	UQuestDataAsset** QuestData = QuestDataAsset->QuestMap.Find("GoSleep");
-
-	if (QuestData != nullptr)
-	{
-		if (IsValid(*QuestData))
-		{
-			QuestComponent->StartQuest(*QuestData);
-		}
-	}
-	
+	QuestComponent->ActivateQuest("Go rest");	
 }
 
 void UQuestWorldSubsystem::FirstStepFieldBroadcast(bool Value)
