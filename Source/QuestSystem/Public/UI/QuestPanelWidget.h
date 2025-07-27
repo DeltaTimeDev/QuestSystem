@@ -23,7 +23,7 @@ public:
 
 protected:
 	/** Scroll alanı: her görevin ekleneceği yer */
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(meta = (BindWidget),BlueprintReadOnly)
 	class UVerticalBox* QuestListBox;
 
 	/** Her görev için kullanılacak alt widget (BP'den atanır) */
