@@ -19,6 +19,9 @@ public:
 	FString QuestName;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FString QuestDisplayName;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FString Description;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)

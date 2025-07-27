@@ -48,13 +48,3 @@ void UQuestWorldSubsystem::BroadcastEvent(const FGameplayTag& EventTag)
 	}
 }
 
-void UQuestWorldSubsystem::OnFirstStepField(bool bArg)
-{
-	QuestComponent->ActivateQuest("Go rest");	
-}
-
-void UQuestWorldSubsystem::FirstStepFieldBroadcast(bool Value)
-{
-	OnFirstStepFieldDelegate.Broadcast(Value);
-}
-

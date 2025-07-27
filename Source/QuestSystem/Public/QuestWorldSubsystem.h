@@ -48,15 +48,4 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FQuestEventDelegate OnQuestFinishDelegate;
 	
-	UPROPERTY(BlueprintAssignable)
-	FEventDelegate OnFirstStepFieldDelegate;
-
-
-	UFUNCTION(BlueprintCallable)
-	void FirstStepFieldBroadcast(bool Value);
-	
-
-
-	UFUNCTION()
-	void OnFirstStepField(bool bArg);
 };

@@ -70,7 +70,7 @@ void UQuestPanelWidget::AddQuestToPanel(UQuest* NewQuest)
 			// TextBlock’ları bulup doldur
 			if (UTextBlock* TitleText = Cast<UTextBlock>(Entry->GetWidgetFromName("QuestTitle")))
 			{
-				TitleText->SetText(FText::FromString(NewQuest->QuestDataAsset->QuestName));
+				TitleText->SetText(FText::FromString(NewQuest->QuestDataAsset->QuestDisplayName));
 			}
 
 			if (UTextBlock* DescText = Cast<UTextBlock>(Entry->GetWidgetFromName("ObjectiveText")))
