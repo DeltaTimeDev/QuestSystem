@@ -35,8 +35,12 @@ protected:
 	class UQuestComponent* QuestComponent;
 
 	UFUNCTION()
-	void OnQuestAdded(bool bNewValue);
+	void OnQuestAdded(class UQuest* NewQuest);
 
 	UFUNCTION()
-	void OnQuestFinished(bool bNewValue);
+	void OnQuestFinished(class UQuest* NewQuest);
+
+
+	UFUNCTION()
+	void AddQuestToPanel(const class UQuest* NewQuest);
 };

@@ -58,14 +58,16 @@ void UQuestComponent::ActivateQuest(UQuest* Quest)
 	Quest->bIsActivated = true;
 	Quest->OnQuestFinished.AddDynamic(this,&UQuestComponent::OnQuestFinished);
 	ActivatedQuestList.Add(Quest);
-	QuestWorldSubsystem->OnQuestAddedDelegate.Broadcast(true);
+	QuestWorldSubsystem->OnQuestAddedDelegate.Broadcast(Quest);
 }
 
 
 void UQuestComponent::OnEventReceived(const FGameplayTag& EventTag)
 {
+	
 	for (UQuest* Quest : AllQuestList)
 	{
+		Quest->OnEventReceived(EventTag);
 		for (UQuestObjective* Objective : Quest->Objectives)
 		{
 			Objective->OnEventReceived(EventTag);
@@ -73,11 +75,11 @@ void UQuestComponent::OnEventReceived(const FGameplayTag& EventTag)
 	}
 }
 
-void UQuestComponent::OnQuestFinished(UQuest* ActiveQuest)
+void UQuestComponent::OnQuestFinished(UQuest* Quest)
 {
-	ActiveQuest->OnQuestFinished.RemoveDynamic(this, &UQuestComponent::OnQuestFinished);
-	ActiveQuest->Deinit();
-	QuestWorldSubsystem->OnQuestFinishDelegate.Broadcast(true);
+	Quest->OnQuestFinished.RemoveDynamic(this, &UQuestComponent::OnQuestFinished);
+	Quest->Deinit();
+	QuestWorldSubsystem->OnQuestFinishDelegate.Broadcast(Quest);
 }
 
 UQuest* UQuestComponent::GetQuest(FString QuestName)

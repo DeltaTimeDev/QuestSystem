@@ -46,35 +46,39 @@ void UQuestPanelWidget::RefreshQuestList()
 
 		if (Quest->bIsCompleted) continue;
 
-		// Alt widget oluştur
-		if (QuestEntryWidgetClass)
-		{
-			UUserWidget* Entry = CreateWidget<UUserWidget>(this, QuestEntryWidgetClass);
-			if (Entry)
-			{
-				// TextBlock’ları bulup doldur
-				if (UTextBlock* TitleText = Cast<UTextBlock>(Entry->GetWidgetFromName("QuestTitle")))
-				{
-					TitleText->SetText(FText::FromString(Quest->QuestDataAsset->QuestName));
-				}
-
-				if (UTextBlock* DescText = Cast<UTextBlock>(Entry->GetWidgetFromName("ObjectiveText")))
-				{
-					DescText->SetText(Quest->Objectives[0]->Description);
-				}
-
-				QuestListBox->AddChild(Entry);
-			}
-		}
+		AddQuestToPanel(Quest);
 	}
 }
 
-void UQuestPanelWidget::OnQuestAdded(bool bNewValue)
+void UQuestPanelWidget::OnQuestAdded(class UQuest* NewQuest)
+{
+	AddQuestToPanel(NewQuest);
+}
+
+void UQuestPanelWidget::OnQuestFinished(class UQuest* NewQuest)
 {
 	RefreshQuestList();
 }
 
-void UQuestPanelWidget::OnQuestFinished(bool bNewValue)
+void UQuestPanelWidget::AddQuestToPanel(const class UQuest* NewQuest)
 {
-	RefreshQuestList();
+	if (QuestEntryWidgetClass)
+	{
+		UUserWidget* Entry = CreateWidget<UUserWidget>(this, QuestEntryWidgetClass);
+		if (Entry)
+		{
+			// TextBlock’ları bulup doldur
+			if (UTextBlock* TitleText = Cast<UTextBlock>(Entry->GetWidgetFromName("QuestTitle")))
+			{
+				TitleText->SetText(FText::FromString(NewQuest->QuestDataAsset->QuestName));
+			}
+
+			if (UTextBlock* DescText = Cast<UTextBlock>(Entry->GetWidgetFromName("ObjectiveText")))
+			{
+				DescText->SetText(NewQuest->Objectives[0]->Description);
+			}
+
+			QuestListBox->AddChild(Entry);
+		}
+	}
 }

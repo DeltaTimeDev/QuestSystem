@@ -46,7 +46,7 @@ public:
 	void OnEventReceived(const FGameplayTag& EventTag);
 
 	UFUNCTION()
-	void OnQuestFinished(UQuest* ActiveQuest);
+	void OnQuestFinished(UQuest* Quest);
 
 	UQuest* GetQuest(FString QuestName);
 

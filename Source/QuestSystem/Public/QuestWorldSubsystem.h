@@ -8,7 +8,8 @@
 #include "QuestWorldSubsystem.generated.h"
 
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FQuestEventDelegate, bool, NewValue);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FQuestEventDelegate, class UQuest*, Quest);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FEventDelegate, bool, NewValue);
 
 /**
  * 
@@ -48,7 +49,7 @@ public:
 	FQuestEventDelegate OnQuestFinishDelegate;
 	
 	UPROPERTY(BlueprintAssignable)
-	FQuestEventDelegate OnFirstStepFieldDelegate;
+	FEventDelegate OnFirstStepFieldDelegate;
 
 
 	UFUNCTION(BlueprintCallable)
