@@ -49,5 +49,5 @@ class QUESTSYSTEM_API UQuestListDataAsset : public UPrimaryDataAsset
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	TMap<FString,UQuestDataAsset*> QuestMap;
+	TArray<UQuestDataAsset*> QuestList;
 };

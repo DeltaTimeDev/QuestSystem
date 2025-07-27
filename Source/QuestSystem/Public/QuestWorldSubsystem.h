@@ -34,9 +34,6 @@ public:
     class UQuestListDataAsset* QuestDataAsset;
 
 public:
-
-	void GetQuestDataList(TArray<class UQuestDataAsset*>& DataList);
-
 	
 	void RegisterComponent(UQuestComponent* InQuestComponent);
 
