@@ -40,7 +40,7 @@ void UQuestPanelWidget::RefreshQuestList()
 	QuestListBox->ClearChildren();
 
 	const TArray<UQuest*> Quests = QuestComponent->GetActivatedQuests();
-	for (const UQuest* Quest : Quests)
+	for (UQuest* Quest : Quests)
 	{
 		if (!Quest->QuestDataAsset) continue;
 
@@ -55,16 +55,16 @@ void UQuestPanelWidget::OnQuestAdded(class UQuest* NewQuest)
 	AddQuestToPanel(NewQuest);
 }
 
-void UQuestPanelWidget::OnQuestFinished(class UQuest* NewQuest)
+void UQuestPanelWidget::OnQuestFinished(class UQuest* FinishedQuest)
 {
-	RefreshQuestList();
+	FinishQuestInPanel(FinishedQuest);
 }
 
-void UQuestPanelWidget::AddQuestToPanel(const class UQuest* NewQuest)
+void UQuestPanelWidget::AddQuestToPanel(UQuest* NewQuest)
 {
 	if (QuestEntryWidgetClass)
 	{
-		UUserWidget* Entry = CreateWidget<UUserWidget>(this, QuestEntryWidgetClass);
+		UQuestEntry* Entry = CreateWidget<UQuestEntry>(this, QuestEntryWidgetClass);
 		if (Entry)
 		{
 			// TextBlock’ları bulup doldur
@@ -79,6 +79,18 @@ void UQuestPanelWidget::AddQuestToPanel(const class UQuest* NewQuest)
 			}
 
 			QuestListBox->AddChild(Entry);
+
+			QuestEntryMap.Add({NewQuest,Entry});
 		}
 	}
+}
+
+void UQuestPanelWidget::FinishQuestInPanel(const class UQuest* FinishedQuest)
+{
+	QuestEntryMap[FinishedQuest]->FinishQuest(this);
+}
+
+void UQuestPanelWidget::RemoveFromQuestListBox(UQuestEntry* Entry)
+{
+	QuestListBox->RemoveChild(Entry);
 }

@@ -27,6 +27,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FString ActivateQuestNameAfterFinish;
 	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	float ActivationDelay = 2;
+	
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TArray<TSubclassOf<class UQuestObjective>> Objectives;

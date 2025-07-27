@@ -55,6 +55,11 @@ void UQuestComponent::ActivateQuest(FString QuestName)
 
 void UQuestComponent::ActivateQuest(UQuest* Quest)
 {
+	if (Quest->bIsActivated == true)
+	{
+		return;
+	}
+	
 	Quest->bIsActivated = true;
 	Quest->OnQuestFinished.AddDynamic(this,&UQuestComponent::OnQuestFinished);
 	ActivatedQuestList.Add(Quest);

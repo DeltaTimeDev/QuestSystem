@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "QuestEntry.h"
 #include "Blueprint/UserWidget.h"
 #include "QuestPanelWidget.generated.h"
 
@@ -30,6 +31,8 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
 	TSubclassOf<UUserWidget> QuestEntryWidgetClass;
 
+	UPROPERTY()
+	TMap<class UQuest*, UQuestEntry*> QuestEntryMap;
 	/** Görev component'i */
 	UPROPERTY()
 	class UQuestComponent* QuestComponent;
@@ -42,5 +45,12 @@ protected:
 
 
 	UFUNCTION()
-	void AddQuestToPanel(const class UQuest* NewQuest);
+	void AddQuestToPanel(class UQuest* NewQuest);
+
+	UFUNCTION()
+	void FinishQuestInPanel(const class UQuest* FinishedQuest);
+
+public:
+	UFUNCTION()
+	void RemoveFromQuestListBox(UQuestEntry* Entry);
 };

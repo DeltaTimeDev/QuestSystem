@@ -40,8 +40,36 @@ void UQuest::OnObjectiveCompleted(UQuestObjective* Objective)
 
 	if (AllCompleted)
 	{
-		bIsCompleted = true;
-		OnQuestFinished.Broadcast(this);
+		OnQuestCompleted();
+	}
+}
+
+void UQuest::OnQuestCompleted()
+{
+	bIsCompleted = true;
+	OnQuestFinished.Broadcast(this);
+
+
+	if (QuestDataAsset->ActivateQuestNameAfterFinish != "")
+	{
+		//QuestComponent->ActivateQuest(QuestDataAsset->ActivateQuestNameAfterFinish);
+
+		FTimerHandle TimerHandle;
+		const FString QuestNameToActivate = QuestDataAsset->ActivateQuestNameAfterFinish;
+		const float DelayInSeconds = QuestDataAsset->ActivationDelay;
+		
+		GetWorld()->GetTimerManager().SetTimer(
+			TimerHandle,
+			[this, QuestNameToActivate]()
+			{
+				if (QuestComponent)
+				{
+					QuestComponent->ActivateQuest(QuestNameToActivate);
+				}
+			},
+			DelayInSeconds,
+			false
+		);
 	}
 }
 
@@ -59,10 +87,5 @@ void UQuest::OnEventReceived(const FGameplayTag& EventTag)
 	if (EventTag.MatchesTagExact(QuestDataAsset->ActivateQuestEvent))
 	{
 		QuestComponent->ActivateQuest(this);
-	}
-
-	if (QuestDataAsset->ActivateQuestNameAfterFinish != "")
-	{
-		QuestComponent->ActivateQuest(QuestDataAsset->ActivateQuestNameAfterFinish);
 	}
 }

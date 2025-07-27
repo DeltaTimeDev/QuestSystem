@@ -41,6 +41,9 @@ public:
 	UFUNCTION()
 	void OnObjectiveCompleted(UQuestObjective* Objective);
 
+	UFUNCTION()
+	void OnQuestCompleted();
+
 	bool IsActivated() const { return bIsActivated; }
 	bool IsCompleted() const { return bIsCompleted; }
 	FString GetQuestName();
