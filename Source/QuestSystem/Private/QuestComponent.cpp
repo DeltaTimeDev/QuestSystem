@@ -6,6 +6,7 @@
 #include "QuestDataAsset.h"
 #include "QuestObjective.h"
 #include "QuestWorldSubsystem.h"
+#include "Kismet/GameplayStatics.h"
 
 UQuestComponent::UQuestComponent()
 {
@@ -18,7 +19,7 @@ void UQuestComponent::OnRegister()
 
 	QuestWorldSubsystem = GetWorld()->GetSubsystem<UQuestWorldSubsystem>();
 
-	check (QuestWorldSubsystem)
+	//check (QuestWorldSubsystem)
 	
 	if (QuestWorldSubsystem)
 	{
@@ -64,6 +65,7 @@ void UQuestComponent::ActivateQuest(UQuest* Quest)
 	Quest->OnQuestFinished.AddDynamic(this,&UQuestComponent::OnQuestFinished);
 	ActivatedQuestList.Add(Quest);
 	QuestWorldSubsystem->OnQuestAddedDelegate.Broadcast(Quest);
+	OnQuestIsActivated(Quest);
 }
 
 
@@ -94,4 +96,19 @@ UQuest* UQuestComponent::GetQuest(FString QuestName)
 		return Quest && Quest->GetQuestName() == QuestName;
 	});
 	return Found ? *Found : nullptr;
+}
+
+void UQuestComponent::OnQuestIsActivated(UQuest* Quest)
+{
+	TArray<AActor*> FoundActors;
+	FString TargetAssetTag = Quest->QuestDataAsset->TargetAssetTag;
+	UGameplayStatics::GetAllActorsWithTag(this, *TargetAssetTag,FoundActors);
+
+	if (FoundActors.Num() > 0)
+		AddIconToMap(FoundActors[0]);
+}
+
+void UQuestComponent::AddIconToMap(AActor* AttachActor)
+{
+	
 }

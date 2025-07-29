@@ -39,6 +39,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	bool bIsRepeatable = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FString TargetAssetTag = "None";
 	
 };
 

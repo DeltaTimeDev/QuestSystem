@@ -54,5 +54,8 @@ public:
 	// Catche data
 	UPROPERTY()
 	class UQuestWorldSubsystem* QuestWorldSubsystem;
+
+	virtual void OnQuestIsActivated(UQuest* Quest);
+	virtual void AddIconToMap(AActor* AttachActor);
 	
 };

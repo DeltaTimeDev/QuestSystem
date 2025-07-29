@@ -48,7 +48,7 @@ void UQuest::OnQuestCompleted()
 {
 	bIsCompleted = true;
 	OnQuestFinished.Broadcast(this);
-
+ 
 
 	if (QuestDataAsset->ActivateQuestNameAfterFinish != "")
 	{
