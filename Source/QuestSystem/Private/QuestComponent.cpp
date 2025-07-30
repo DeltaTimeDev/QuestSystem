@@ -87,6 +87,7 @@ void UQuestComponent::OnQuestFinished(UQuest* Quest)
 	Quest->OnQuestFinished.RemoveDynamic(this, &UQuestComponent::OnQuestFinished);
 	Quest->Deinit();
 	QuestWorldSubsystem->OnQuestFinishDelegate.Broadcast(Quest);
+	RemoveIconFromMap(Quest);
 }
 
 UQuest* UQuestComponent::GetQuest(FString QuestName)
@@ -105,10 +106,15 @@ void UQuestComponent::OnQuestIsActivated(UQuest* Quest)
 	UGameplayStatics::GetAllActorsWithTag(this, *TargetAssetTag,FoundActors);
 
 	if (FoundActors.Num() > 0)
-		AddIconToMap(FoundActors[0]);
+		AddIconToMap(Quest, FoundActors[0]);
 }
 
-void UQuestComponent::AddIconToMap(AActor* AttachActor)
+void UQuestComponent::AddIconToMap(UQuest* Quest, AActor* AttachActor)
+{
+	
+}
+
+void UQuestComponent::RemoveIconFromMap(UQuest* Quest)
 {
 	
 }

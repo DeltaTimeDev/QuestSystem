@@ -56,6 +56,7 @@ public:
 	class UQuestWorldSubsystem* QuestWorldSubsystem;
 
 	virtual void OnQuestIsActivated(UQuest* Quest);
-	virtual void AddIconToMap(AActor* AttachActor);
+	virtual void AddIconToMap(UQuest* Quest, AActor* AttachActor);
+	virtual void RemoveIconFromMap(UQuest* Quest);
 	
 };
